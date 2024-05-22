@@ -219,7 +219,32 @@ public function getProductsWithDiscount()
     }
 }
 
-
+public function disableProduct($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->disabled = true;
+            $product->save();
+            
+            return response()->json(['message' => 'Product disabled successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
+ 
+    public function enableProduct($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->disabled = false;
+            $product->save();
+            
+            return response()->json(['message' => 'Product enabled successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
 
     public function addReview(Request $request, $productId)

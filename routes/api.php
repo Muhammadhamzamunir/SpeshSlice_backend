@@ -37,8 +37,8 @@ Route::post('/register-bakery', [HandleBakeryController::class, "registerBakeryh
 Route::post('/update-bakery/{id}', [HandleBakeryController::class, "updateBakery"])->middleware(tokenAuthentication::class);
 Route::delete('/delete-bakery/{id}', [HandleBakeryController::class, "deleteBakery"])->middleware(tokenAuthentication::class);
 Route::get('/bakeries-near-user/{id}', [HandleBakeryController::class, "getBakeriesNearuser"]);
-Route::get('/disable-bakery/{id}', [HandleBakeryController::class, 'disableBakery']);
-Route::get('/enable-bakery/{id}', [HandleBakeryController::class, 'enableBakery']);
+Route::post('/disable-bakery/{id}', [HandleBakeryController::class, 'disableBakery']);
+Route::post('/enable-bakery/{id}', [HandleBakeryController::class, 'enableBakery']);
 
 //Category Routes
 Route::get('/category',[CategoryController::class,"getCategories"]);
@@ -51,6 +51,10 @@ Route::get('/products/category/{categoryName}', [ProductController::class, 'getP
 Route::post('/products', [ProductController::class, 'addProduct'])->middleware(tokenAuthentication::class);
 Route::delete('/products/{id}', [ProductController::class, 'deleteProduct'])->middleware(tokenAuthentication::class);
 Route::post('/update-products/{id}', [ProductController::class, 'updateProduct'])->middleware(tokenAuthentication::class);
+Route::post('/disable-product/{id}', [ProductController::class, 'disableProduct']);
+Route::post('/enable-product/{id}', [ProductController::class, 'enableProduct']);
+
+
 
 //Cart Routes
 Route::get('/cart/{user}', [CartController::class, 'getCartProducts']);
