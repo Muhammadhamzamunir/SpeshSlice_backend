@@ -291,6 +291,10 @@ public function updateBakeryDetails(Request $request, $id)
         'email' => 'required|email|max:255',
         'phone' => 'required|string|max:20',
         'description' => 'nullable|string',
+        'price_per_tier'=>'nullable|numeric',
+        'price_per_pound'=>'nullable|numeric',
+        'tax'=>'nullable|numeric',
+        'price_per_decoration'=>'nullable|numeric',
     ]);
 
     // Find the bakery record by ID
