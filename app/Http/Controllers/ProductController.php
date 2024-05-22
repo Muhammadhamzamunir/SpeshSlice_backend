@@ -133,21 +133,53 @@ class ProductController extends Controller
     
 
 
-public function getProduct(Request $request, $productId = null)
-{
+// public function getProduct(Request $request, $productId = null)
+// {
     
-    try {
-        if (!$productId) {
+//     try {
+//         if (!$productId) {
            
 
-            $products = Product::with('discounts', 'bakery','reviews.user','category')->get();
+//             $products = Product::with('discounts', 'bakery','reviews.user','category')->get();
+//             return response()->json(['data' => $products], 200);
+//         } else {
+            
+//             $product = Product::with('discounts', 'bakery', 'reviews.user','category')->find($productId);
+//             if (!$product) {
+//                 return response()->json(['error' => 'Product not found'], 404);
+//             }
+//             return response()->json(['data' => $product], 200);
+//         }
+//     } catch (ValidationException $e) {
+//         $errorMessages = implode(', ', $e->validator->errors()->all());
+//         return response()->json(['error' => $errorMessages], 400);
+//     }
+// }
+
+public function getProduct(Request $request, $productId = null)
+{
+    try {
+        if (!$productId) {
+            // Fetch all products that are not disabled
+            $products = Product::with('discounts', 'bakery', 'reviews.user', 'category')
+                               ->where('disabled', false)
+                               ->get();
+            
+            if ($products->isEmpty()) {
+                return response()->json(['error' => 'No products found'], 404);
+            }
+
             return response()->json(['data' => $products], 200);
         } else {
-            
-            $product = Product::with('discounts', 'bakery', 'reviews.user','category')->find($productId);
+            // Fetch the product by ID
+            $product = Product::with('discounts', 'bakery', 'reviews.user', 'category')
+                              ->where('disabled', false) // Filter out disabled products
+                              ->find($productId);
+
             if (!$product) {
                 return response()->json(['error' => 'Product not found'], 404);
             }
+
             return response()->json(['data' => $product], 200);
         }
     } catch (ValidationException $e) {
@@ -155,7 +187,6 @@ public function getProduct(Request $request, $productId = null)
         return response()->json(['error' => $errorMessages], 400);
     }
 }
-
 
 
 public function getProductsByBakery($bakeryId)

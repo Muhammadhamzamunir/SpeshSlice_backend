@@ -37,6 +37,8 @@ Route::post('/register-bakery', [HandleBakeryController::class, "registerBakeryh
 Route::post('/update-bakery/{id}', [HandleBakeryController::class, "updateBakery"])->middleware(tokenAuthentication::class);
 Route::delete('/delete-bakery/{id}', [HandleBakeryController::class, "deleteBakery"])->middleware(tokenAuthentication::class);
 Route::get('/bakeries-near-user/{id}', [HandleBakeryController::class, "getBakeriesNearuser"]);
+Route::get('/disable-bakery/{id}', [HandleBakeryController::class, 'disableBakery']);
+Route::get('/enable-bakery/{id}', [HandleBakeryController::class, 'enableBakery']);
 
 //Category Routes
 Route::get('/category',[CategoryController::class,"getCategories"]);

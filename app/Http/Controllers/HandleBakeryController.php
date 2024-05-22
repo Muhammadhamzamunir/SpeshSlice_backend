@@ -15,11 +15,33 @@ use App\Models\Product;
 class HandleBakeryController extends Controller
 {
 
-    public function getBakeries($id = null)
+//     public function getBakeries($id = null)
+// {
+//     try {
+//         if ($id) {
+//             $bakery = Bakery::with('address', 'products.category', 'products.discounts', 'reviews.user')->find($id);
+        
+//             if (!$bakery) {
+//                 return response()->json(['error' => 'Bakery not found'], 404);
+//             }
+
+//             return response()->json(['data' => $bakery]);
+//         } else {
+//             $bakeries = Bakery::with('address','products.category', 'products.discounts','reviews.user')->get();
+//             return response()->json(['data' => $bakeries]);
+//         }
+//     } catch (\Exception $e) {
+//         return response()->json(['error' => $e->getMessage()], 500);
+//     }
+// }
+
+public function getBakeries($id = null)
 {
     try {
         if ($id) {
-            $bakery = Bakery::with('address', 'products.category', 'products.discounts', 'reviews.user')->find($id);
+            $bakery = Bakery::with('address', 'products.category', 'products.discounts', 'reviews.user')
+                            ->where('disabled', false) 
+                            ->find($id);
         
             if (!$bakery) {
                 return response()->json(['error' => 'Bakery not found'], 404);
@@ -27,15 +49,16 @@ class HandleBakeryController extends Controller
 
             return response()->json(['data' => $bakery]);
         } else {
-            $bakeries = Bakery::with('address','products.category', 'products.discounts','reviews.user')->get();
+            $bakeries = Bakery::with('address', 'products.category', 'products.discounts', 'reviews.user')
+                              ->where('disabled', false) // Filter out disabled bakeries
+                              ->get();
             return response()->json(['data' => $bakeries]);
         }
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }
-
-    
+ 
 
 
     function registerBakeryhandle(Request $request) {
@@ -224,5 +247,38 @@ public function getBakeriesNearUser($userId)
 
     return response()->json(["data" => $bakeriesWithProducts], 200);
 }
+
+public function disableBakery($id)
+{
+    $bakery = Bakery::findOrFail($id);
+    $bakery->disabled = true;
+    $bakery->save();
+
+    // Disable related products
+    $products = $bakery->products;
+    foreach ($products as $product) {
+        $product->disabled = true;
+        $product->save();
+    }
+
+    return response()->json(['message' => 'Bakery and its products disabled successfully']);
+}
+
+public function enableBakery($id)
+{
+    $bakery = Bakery::findOrFail($id);
+    $bakery->disabled = false;
+    $bakery->save();
+
+    // Enable related products that were previously disabled due to bakery disablement
+    $products = $bakery->products()->where('disabled', true)->get();
+    foreach ($products as $product) {
+        $product->disabled = false;
+        $product->save();
+    }
+
+    return response()->json(['message' => 'Bakery and its products enabled successfully']);
+}
+
 
 }

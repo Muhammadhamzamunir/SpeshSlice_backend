@@ -11,7 +11,7 @@ class Bakery extends Model
    
     protected $table = 'bakeries';
 
-    protected $fillable = ['owner_name','logo_url','user_id', 'business_name', 'specialty', 'timing', 'email', 'phone', 'price_per_pound', 'price_per_decoration', 'price_per_tier', 'price_for_shape', 'tax', 'address_id','description'];
+    protected $fillable = ['owner_name','logo_url','user_id', 'business_name', 'specialty', 'timing', 'email', 'phone', 'price_per_pound', 'price_per_decoration', 'price_per_tier', 'price_for_shape', 'tax', 'address_id','description','disabled'];
 
     public function address()
     {
