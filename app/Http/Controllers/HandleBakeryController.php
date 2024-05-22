@@ -280,5 +280,29 @@ public function enableBakery($id)
     return response()->json(['message' => 'Bakery and its products enabled successfully']);
 }
 
+public function updateBakeryDetails(Request $request, $id)
+{
+    // Validate the request data
+    $validatedData = $request->validate([
+        'owner_name' => 'required|string|max:255',
+        'business_name' => 'required|string|max:255',
+        'specialty' => 'required|string|max:255',
+        'timing' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'phone' => 'required|string|max:20',
+        'description' => 'nullable|string',
+    ]);
 
+    // Find the bakery record by ID
+    $bakery = Bakery::findOrFail($id);
+
+    // Update the bakery details
+    $bakery->update($validatedData);
+
+    // Return a success response
+    return response()->json([
+        'message' => 'Bakery details updated successfully',
+        'data' => $bakery
+    ], 200);
+}
 }

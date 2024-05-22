@@ -13,6 +13,14 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\GraphDataController;
+
+
+//stats
+Route::get('/graph/user-registrations', [GraphDataController::class, 'getUserRegistrations']);
+Route::get('/graph/bakery-registrations', [GraphDataController::class, 'getBakeryRegistrations']);
+Route::get('/graph/product-additions', [GraphDataController::class, 'getProductAdditions']);
+Route::get('/graph/order-placements', [GraphDataController::class, 'getOrderPlacements']);
 
 
 Route::post('/update-user/{id}', [loginController::class, "updateUser"])->middleware(tokenAuthentication::class);
@@ -39,6 +47,7 @@ Route::delete('/delete-bakery/{id}', [HandleBakeryController::class, "deleteBake
 Route::get('/bakeries-near-user/{id}', [HandleBakeryController::class, "getBakeriesNearuser"]);
 Route::post('/disable-bakery/{id}', [HandleBakeryController::class, 'disableBakery']);
 Route::post('/enable-bakery/{id}', [HandleBakeryController::class, 'enableBakery']);
+Route::post('/updateBakery-Details/{id}', [HandleBakeryController::class, 'updateBakeryDetails']);
 
 //Category Routes
 Route::get('/category',[CategoryController::class,"getCategories"]);
