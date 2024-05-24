@@ -9,10 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            // $table->boolean('disabled')->default(false);
+            $table->integer('no_of_pounds')->nullable()->change();
+            $table->integer('no_of_serving')->nullable()->change();
         });
     }
 
