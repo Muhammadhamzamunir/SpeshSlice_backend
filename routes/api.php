@@ -14,8 +14,11 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\GraphDataController;
+use App\Http\Controllers\ForgetPassword;
 
 
+//ForgetPassword
+Route::post('/forgetpassword', [ForgetPassword::class, "forgetPassword"]);
 //stats
 Route::get('/graph/user-registrations', [GraphDataController::class, 'getUserRegistrations']);
 Route::get('/graph/bakery-registrations', [GraphDataController::class, 'getBakeryRegistrations']);
