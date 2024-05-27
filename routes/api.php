@@ -15,10 +15,8 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\GraphDataController;
 use App\Http\Controllers\ForgetPassword;
+use Illuminate\Support\Facades\Auth;
 
-
-//ForgetPassword
-Route::post('/forgetpassword', [ForgetPassword::class, "forgetPassword"]);
 //stats
 Route::get('/graph/user-registrations', [GraphDataController::class, 'getUserRegistrations']);
 Route::get('/graph/bakery-registrations', [GraphDataController::class, 'getBakeryRegistrations']);
@@ -31,8 +29,13 @@ Route::post('/update-userPassword/{id}', [loginController::class, "changePasswor
 
 
 //Users Route
-Route::post('/logout', [loginController::class,"logout"]);
-Route::post('/login', [loginController::class,"login"]);
+
+Route::post('/logout-user', function(){
+    auth()->logout();
+
+    return response()->json(['success' => 'Successfully logged out']);
+});
+ Route::post('/login', [loginController::class,"login"]);
 Route::post('/signup',[registerController::class,"registrationHandle"])->name('registeration');
 
 // Address Route
@@ -85,6 +88,8 @@ Route::get('/discounts', [ProductController::class, 'getProductsWithDiscount']);
 
 
 
+//ForgetPassword
+// Route::post('/forgetpassword', [ForgetPassword::class, "forgetPassword"]);
 
 
 Route::post('/process-payment', [PaymentController::class, 'processPayment']);
