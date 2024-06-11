@@ -89,7 +89,7 @@ Route::get('/discounts', [ProductController::class, 'getProductsWithDiscount']);
 
 
 //ForgetPassword
-// Route::post('/forgetpassword', [ForgetPassword::class, "forgetPassword"]);
+Route::post('/forgetpassword', [ForgetPassword::class, "forgetPassword"]);
 
 
 Route::post('/process-payment', [PaymentController::class, 'processPayment']);

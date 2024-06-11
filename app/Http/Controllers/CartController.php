@@ -55,24 +55,36 @@ class CartController extends Controller
 
 public function addCartProducts($user_id, $product_id, $quantity)
 {
-   
+    $product = Product::find($product_id);
+    
+    if (!$product) {
+        return response()->json(['error' => 'Product not found'], 404);
+    }
+
     $cartItem = Cart::where('user_id', $user_id)
                     ->where('product_id', $product_id)
                     ->first();
 
     if ($cartItem) {
+       
+        if (($cartItem->quantity + $quantity) > $product->quantity) {
+            return response()->json(['error' => 'Check You Cart!..Quantity exceeds available stock'], 400);
+        }
         
         $cartItem->quantity += $quantity;
         $cartItem->save();
     } else {
        
+        if ($quantity > $product->quantity) {
+            return response()->json(['error' => 'Check You Cart!..Quantity exceeds available stock'], 400);
+        }
+        
         Cart::create([
             'user_id' => $user_id,
             'product_id' => $product_id,
             'quantity' => $quantity,
         ]);
     }
-   
 
     return response()->json(['success' => 'Product added to cart successfully']);
 }
