@@ -90,7 +90,11 @@ Route::get('/discounts', [ProductController::class, 'getProductsWithDiscount']);
 
 //ForgetPassword
 Route::post('/forgetpassword', [ForgetPassword::class, "forgetPassword"]);
-
+// ---------------------------middleware-----------
+//orders
+Route::get('/getUserOrder/{id}', [PaymentController::class, 'getUserOrders']);
+Route::get('/getBakeryOrder/{id}', [PaymentController::class, 'getBakeryOrders']);
+Route::post('/orders/{id}/update-status',[ PaymentController::class,'updateStatus']);
 
 Route::post('/process-payment', [PaymentController::class, 'processPayment']);
 Route::post('/create-payment-intent', 'PaymentController@createPaymentIntent');

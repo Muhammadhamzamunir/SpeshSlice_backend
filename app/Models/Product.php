@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Review;
-
+use App\Models\Order;
 class Product extends Model
 {
     use HasFactory;
@@ -37,6 +37,10 @@ class Product extends Model
     public function bakery()
     {
         return $this->belongsTo(Bakery::class);
+    }
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
     public function category()
 {

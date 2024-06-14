@@ -16,6 +16,49 @@ use App\Models\Order;
 use Illuminate\Support\Str;
 class PaymentController extends Controller
 {
+    public function getUserOrders(Request $request,$id){
+        $userOrders = Order::with('product','bakery')->where('user_id',$id)->get();
+        return response()->json($userOrders, 200);
+    }
+    public function getBakeryOrders(Request $request,$id){
+        $bakeryOrders = Order::with('product','bakery')->where('bakery_id',$id)->get();
+        return response()->json($bakeryOrders, 200);
+    }
+    public function cancelOrder(Request $request, $id)
+{
+    $order = Order::find($id);
+    if (!$order) {
+        return response()->json(["error" => "Order not found"], 404);
+    }
+
+    $order->delete();
+
+    return response()->json(["success" => "Order removed successfully"], 200);
+}
+
+public function updateStatus(Request $request, $id)
+{
+    // Validate the incoming request data
+    $request->validate([
+        'status' => 'required|in:pending,Baking,completed,cancelled',
+    ]);
+
+    // Find the order by ID
+    $order = Order::find($id);
+
+    // Check if the order exists
+    if (!$order) {
+        return response()->json(['error' => 'Order not found'], 404);
+    }
+
+    // Update the status of the order
+    $order->status = $request->input('status');
+    $order->save();
+
+
+    return response()->json(['success' => 'Order status updated successfully'], 200);
+}
+
     public function processPayment(Request $request)
     {
 

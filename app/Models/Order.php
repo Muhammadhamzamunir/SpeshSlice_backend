@@ -26,7 +26,7 @@ class Order extends Model
         'transaction_id'
     ];
 
-    // Define relationships
+
     public function user()
     {
         return $this->belongsTo(User::class);
