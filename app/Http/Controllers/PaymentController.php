@@ -37,25 +37,16 @@ class PaymentController extends Controller
 }
 
 public function updateStatus(Request $request, $id)
-{
-    // Validate the incoming request data
+{    
     $request->validate([
         'status' => 'required|in:pending,Baking,completed,cancelled',
     ]);
-
-    // Find the order by ID
     $order = Order::find($id);
-
-    // Check if the order exists
     if (!$order) {
         return response()->json(['error' => 'Order not found'], 404);
     }
-
-    // Update the status of the order
     $order->status = $request->input('status');
     $order->save();
-
-
     return response()->json(['success' => 'Order status updated successfully'], 200);
 }
 

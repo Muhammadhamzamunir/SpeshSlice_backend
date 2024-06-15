@@ -23,16 +23,13 @@ Route::get('/graph/bakery-registrations', [GraphDataController::class, 'getBaker
 Route::get('/graph/product-additions', [GraphDataController::class, 'getProductAdditions']);
 Route::get('/graph/order-placements', [GraphDataController::class, 'getOrderPlacements']);
 
-
 Route::post('/update-user/{id}', [loginController::class, "updateUser"])->middleware(tokenAuthentication::class);
 Route::post('/update-userPassword/{id}', [loginController::class, "changePassword"])->middleware(tokenAuthentication::class);
 
 
 //Users Route
-
 Route::post('/logout-user', function(){
     auth()->logout();
-
     return response()->json(['success' => 'Successfully logged out']);
 });
  Route::post('/login', [loginController::class,"login"]);
@@ -84,8 +81,6 @@ Route::post('/products/{productId}/review', [ProductController::class, 'addRevie
 
 //Discounted Products
 Route::get('/discounts', [ProductController::class, 'getProductsWithDiscount']);
-
-
 
 
 //ForgetPassword
