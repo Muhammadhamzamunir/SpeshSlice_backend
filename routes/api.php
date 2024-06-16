@@ -65,6 +65,7 @@ Route::delete('/products/{id}', [ProductController::class, 'deleteProduct'])->mi
 Route::post('/update-products/{id}', [ProductController::class, 'updateProduct'])->middleware(tokenAuthentication::class);
 Route::post('/disable-product/{id}', [ProductController::class, 'disableProduct']);
 Route::post('/enable-product/{id}', [ProductController::class, 'enableProduct']);
+Route::post('/customizeCake', [ProductController::class, 'addCustomizeCake']);
 
 
 

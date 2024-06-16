@@ -5,13 +5,38 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Feedback;
+use App\Models\CustomizeCake;
 use Illuminate\Validation\ValidationException;
 use App\Models\ProductDiscount;
 use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
    
+    public function addCustomizeCake(Request $request)
+    {
+        
+        $validatedData = $request->validate([
+            'bakery_id' => 'required|integer',
+            'name' => 'required|string',
+            'image_url' => 'required|string',
+            'price' => 'required|numeric',
+            'quantity' => 'integer', 
+        ]);
 
+        
+        $customizeCake = CustomizeCake::create([
+            'bakery_id' => $validatedData['bakery_id'],
+            'name' => $validatedData['name'],
+            'image_url' => $validatedData['image_url'],
+            'price' => $validatedData['price'],
+            'quantity' => $validatedData['quantity'] ?? 0, 
+        ]);
+
+        return response()->json([
+            'success' => 'Customize cake added successfully',
+            'customize_cake' => $customizeCake->refresh()
+        ], 200);
+    }
     public function addProduct(Request $request)
     {
         try {
