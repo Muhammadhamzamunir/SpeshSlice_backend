@@ -21,6 +21,10 @@ class Bakery extends Model
     {
         return $this->hasMany(Product::class);
     }
+    public function customizeproduct()
+    {
+        return $this->hasMany(CustomizeCake::class);
+    }
     public function user()
     {
         return $this->belongsTo(User::class);

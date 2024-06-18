@@ -12,4 +12,13 @@ class customizeCake extends Model
     protected $table = 'customize_cakes';
     protected $fillable = ['bakery_id','name','image_url', 'price','quantity'];
 
+    public function bakery()
+    {
+        return $this->belongsTo(Bakery::class);
+    }
+   
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }

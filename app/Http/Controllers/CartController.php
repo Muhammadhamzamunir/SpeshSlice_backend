@@ -18,7 +18,6 @@ class CartController extends Controller
     public function deleteProductFromCart($id){
         $item =Cart::find($id);
         if($item){
-
             $item->delete();
             return response()->json(["success"=>"Item Removed"], 200);
         }else{
@@ -26,83 +25,39 @@ class CartController extends Controller
 
         }
     }
-//     public function getCartProducts($user_id)
-// {
-//     // Retrieve cart items for the user
-//     $items = Cart::where('user_id', $user_id)->get();       
 
-//     // Collect product IDs from the cart items
-//     $productIds = $items->pluck('product_id')->toArray();
-
-//     // Retrieve products with discounts where their IDs match the IDs in the cart
-//     $products = Product::with('discounts')->whereIn('id', $productIds)->get();
-
-//     // Modify the products array to include the id attribute for each item
-//     $modifiedProducts = $products->map(function ($product) use ($items) {
-//         // Find the corresponding cart item for the product
-//         $cartItem = $items->where('product_id', $product->id)->first();
-
-//         // Add the id attribute to the product
-//         $product->setAttribute('cart_id', $cartItem->id);
-//         $product->setAttribute('cart_quantity', $cartItem->quantity);
-
-//         return $product;
-//     });
-
-//     return response()->json(["data" => $modifiedProducts]);
-// }
 public function getCartProducts($user_id)
 {
-    // Retrieve cart items for the user
     $cartItems = Cart::where('user_id', $user_id)->get();       
-
-    // Collect product IDs from the cart items
-    $productIds = $cartItems->pluck('product_id')->toArray();
-
-    // Initialize arrays to collect regular products and customize products
     $regularProducts = [];
     $customizeProducts = [];
-
-    // Iterate through each cart item to categorize products
     foreach ($cartItems as $cartItem) {
-        // Fetch the corresponding product
-        $product = Product::find($cartItem->product_id);
-
-        if (!$product) {
-            // Handle case where product is not found (optional)
-            continue;
-        }
-
-        // Check if the product is a customizeCake product
         if ($cartItem->customize) {
-            // Fetch details from customizeCake table
             $customizeCake = CustomizeCake::find($cartItem->product_id);
-
             if ($customizeCake) {
-                // Add customizeCake product to customizeProducts array
+                
                 $customizeProducts[] = [
                     'id' => $customizeCake->id,
                     'name' => $customizeCake->name,
                     'image_url' => $customizeCake->image_url,
                     'price' => $customizeCake->price,
-                    'quantity' => $cartItem->quantity,
+                    'cart_quantity' => $cartItem->quantity,
                     'cart_id' => $cartItem->id,
+                    'bakery_id'=>$customizeCake->bakery_id,
+                    'customize' => $cartItem->customize,
+                    "discounts"=> []
                 ];
             }
         } else {
-            // Add regular product to regularProducts array
-            $regularProducts[] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'image_url' => $product->image_url,
-                'price' => $product->price,
-                'quantity' => $cartItem->quantity,
-                'cart_id' => $cartItem->id,
-            ];
+            $product = Product::with('discounts')->where('id', $cartItem->product_id)->first();
+            if ($product) {
+                $product->cart_quantity = $cartItem->quantity;
+                $product->cart_id = $cartItem->id;
+                $product->customize =false;
+                $regularProducts[] = $product;
+            }
         }
     }
-
-    // Merge regular and customize products
     $mergedProducts = array_merge($regularProducts, $customizeProducts);
 
     return response()->json(["data" => $mergedProducts]);

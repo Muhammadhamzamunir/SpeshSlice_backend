@@ -21,7 +21,7 @@ class Order extends Model
         'method',
         'status',
         'quantity',
-        'custom_name',
+        'custom_Name',
         'img_url',
         'transaction_id'
     ];
@@ -40,5 +40,10 @@ class Order extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+    
+    public function customizeCake()
+    {
+        return $this->belongsTo(CustomizeCake::class,'product_id');
     }
 }

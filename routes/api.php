@@ -89,6 +89,7 @@ Route::post('/forgetpassword', [ForgetPassword::class, "forgetPassword"]);
 // ---------------------------middleware-----------
 //orders
 Route::get('/getUserOrder/{id}', [PaymentController::class, 'getUserOrders']);
+Route::post('/cancelOrder/{id}', [PaymentController::class, 'cancelOrder']);
 Route::get('/getBakeryOrder/{id}', [PaymentController::class, 'getBakeryOrders']);
 Route::post('/orders/{id}/update-status',[ PaymentController::class,'updateStatus']);
 

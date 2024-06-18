@@ -13,16 +13,53 @@ use App\Models\Cart;
 use App\Models\Feedback;
 use App\Models\Bakery;
 use App\Models\Order;
+use App\Models\CustomizeCake;
 use Illuminate\Support\Str;
 class PaymentController extends Controller
 {
-    public function getUserOrders(Request $request,$id){
-        $userOrders = Order::with('product','bakery')->where('user_id',$id)->get();
+    public function getUserOrders(Request $request, $id) {
+    
+        $ordersWithoutCustomName = Order::with('product', 'bakery')
+            ->where('user_id', $id)
+            ->whereNull('custom_Name')
+            ->get();
+    
+        $ordersWithCustomName = Order::with('customizeCake', 'bakery') 
+            ->whereNotNull('custom_Name')
+            ->get();
+    
+        
+        $ordersWithCustomName->transform(function ($order) {
+            $order->product = $order->customizeCake;
+            unset($order->customizeCake);
+            return $order;
+        });
+    
+        $userOrders = $ordersWithoutCustomName->merge($ordersWithCustomName);
+    
         return response()->json($userOrders, 200);
     }
+    
+
     public function getBakeryOrders(Request $request,$id){
-        $bakeryOrders = Order::with('product','bakery')->where('bakery_id',$id)->get();
-        return response()->json($bakeryOrders, 200);
+        $ordersWithoutCustomName = Order::with('product', 'bakery')
+        ->where('user_id', $id)
+        ->whereNull('custom_Name')
+        ->get();
+
+        $ordersWithCustomName = Order::with('customizeCake', 'bakery') 
+            ->whereNotNull('custom_Name')
+            ->get();
+
+        
+        $ordersWithCustomName->transform(function ($order) {
+            $order->product = $order->customizeCake;
+            unset($order->customizeCake);
+            return $order;
+    });
+
+        $bakeryOrders = $ordersWithoutCustomName->merge($ordersWithCustomName);
+            return response()->json($bakeryOrders, 200);
     }
     public function cancelOrder(Request $request, $id)
 {
@@ -52,7 +89,7 @@ public function updateStatus(Request $request, $id)
 
     public function processPayment(Request $request)
     {
-
+    
         $method = $request->input('method');
         $totalAmount = $request->input('totalAmount');
         $userEmail = $request->input('userEmail');
@@ -66,6 +103,9 @@ public function updateStatus(Request $request, $id)
             $cartItems->each->delete();
            
             foreach ($cart_product as $cartItem) {
+                $customize = $cartItem['customize'];
+                if($customize=='false'){ 
+               
                 $product = Product::find($cartItem['id']);
                 if ($product) {
                     Order::create([
@@ -106,19 +146,23 @@ public function updateStatus(Request $request, $id)
                         $product->is_available = false;
                     } 
                     $product->save();
-                }else{
+                }
+            }
+            else{
+                
                     Order::create([
                         'orderId' => $orderId,
                         'user_id' => $user_id,
                         'product_id' => $cartItem['id'],
+                        'bakery_id' => $cartItem['bakery_id'],
                         'total_amount' => $totalAmount,
                         'unit_price' => $cartItem['unit_price'] * $cartItem['quantity'],
                         'selected_address' => $selectedAddress,
                         'user_phone' => $userPhone,
                         'method' => $method,
                         'quantity' => $cartItem['quantity'],
-                        'custom_name' =>$cartItem['custom_name'],
-                        'img_url'=>$cartItem['img_url']
+                        'custom_Name'=>$cartItem['customize']
+                        
                         
                     ]);
                 }
@@ -157,6 +201,8 @@ public function updateStatus(Request $request, $id)
             $cartItems->each->delete();
            
             foreach ($cart_product as $cartItem) {
+                $customize = $cartItem['customize'];
+                if($customize){
                 $product = Product::find($cartItem['id']);
                 if ($product) {
                     
@@ -198,7 +244,9 @@ public function updateStatus(Request $request, $id)
                         $product->is_available = false;
                     } 
                     $product->save();
-                }else{
+                }
+            }
+            else{
                     Order::create([
                         'orderId' => $orderId,
                         'user_id' => $user_id,
@@ -207,10 +255,11 @@ public function updateStatus(Request $request, $id)
                         'unit_price' => $cartItem['unit_price'] * $cartItem['quantity'],
                         'selected_address' => $selectedAddress,
                         'user_phone' => $userPhone,
+                        'bakery_id' => $cartItem['bakery_id'],
                         'method' => $method,
                         'quantity' => $cartItem['quantity'],
-                        'custom_name' =>$cartItem['custom_name'],
-                        'img_url'=>$cartItem['img_url']
+                        'custom_Name'=>$cartItem['customize']
+                     
                         
                     ]);
                 }
