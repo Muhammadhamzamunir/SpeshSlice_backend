@@ -293,7 +293,7 @@ public function disableProduct($id)
         $product->rating = $product->reviews()->avg('rating');
         $product->reviews_count = $product->reviews()->count();
         $product->save();
-        Feedback::where('user_id',$validatedData['user_id'])->where('product_id',$validatedData['product_id'])->delete();
+        Feedback::where('user_id',$validatedData['user_id'])->where('product_id',$validatedData['product_id'])->where('Is_bakery',0)->delete();
         return response()->json(['success' => 'Review product added successfully', 'data' => $review], 200);
     } catch (ValidationException $e) {
         $errorMessages = implode(', ', $e->validator->errors()->all());

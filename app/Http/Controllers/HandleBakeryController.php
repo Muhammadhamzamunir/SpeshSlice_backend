@@ -194,7 +194,7 @@ public function getBakeries($id = null)
         $bakery->averageRating = $bakery->reviews()->avg('rating');
         $bakery->rating_count = $bakery->reviews()->count();
         $bakery->save();
-     Feedback::where('user_id',$validatedData['user_id'])->where('bakery_id',$validatedData['bakery_id'])->delete();
+     Feedback::where('user_id',$validatedData['user_id'])->where('bakery_id',$validatedData['bakery_id'])->where('Is_bakery',1)->delete();
         return response()->json(['success' => 'Review added successfully', 'data' => $review], 200);
     } catch (ValidationException $e) {
         $errorMessages = implode(', ', $e->validator->errors()->all());
