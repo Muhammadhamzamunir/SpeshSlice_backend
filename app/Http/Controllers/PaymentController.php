@@ -63,6 +63,7 @@ class PaymentController extends Controller
     }
     public function cancelOrder(Request $request, $id)
 {
+    
     $order = Order::find($id);
     if (!$order) {
         return response()->json(["error" => "Order not found"], 404);
@@ -89,7 +90,7 @@ public function updateStatus(Request $request, $id)
 
     public function processPayment(Request $request)
     {
-    
+    // return response()->json($request->all(), 200,);
         $method = $request->input('method');
         $totalAmount = $request->input('totalAmount');
         $userEmail = $request->input('userEmail');
