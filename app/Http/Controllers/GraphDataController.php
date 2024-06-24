@@ -86,24 +86,24 @@ class GraphDataController extends Controller
     // Method to get orders on daily and monthly basis
     public function getOrderPlacements()
     {
-        // try {
-        //     $today = Carbon::now()->format('Y-m-d');
-        //     $thisMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
-        //     $lastMonth = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
+        try {
+            $today = Carbon::now()->format('Y-m-d');
+            $thisMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $lastMonth = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
 
-        //     $dailyOrders = Order::whereDate('created_at', $today)->count();
-        //     $monthlyOrders = Order::whereDate('created_at', '>=', $thisMonth)->count();
-        //     $lastMonthOrders = Order::whereDate('created_at', '>=', $lastMonth)
-        //         ->whereDate('created_at', '<', $thisMonth)
-        //         ->count();
+            $dailyOrders = Order::whereDate('created_at', $today)->count();
+            $monthlyOrders = Order::whereDate('created_at', '>=', $thisMonth)->count();
+            $lastMonthOrders = Order::whereDate('created_at', '>=', $lastMonth)
+                ->whereDate('created_at', '<', $thisMonth)
+                ->count();
 
-        //     return response()->json([
-        //         'daily_orders' => $dailyOrders,
-        //         'monthly_orders' => $monthlyOrders,
-        //         'last_month_orders' => $lastMonthOrders
-        //     ], 200);
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => $e->getMessage()], 500);
-        // }
+            return response()->json([
+                'daily_orders' => $dailyOrders,
+                'monthly_orders' => $monthlyOrders,
+                'last_month_orders' => $lastMonthOrders
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
