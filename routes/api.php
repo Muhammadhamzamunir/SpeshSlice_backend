@@ -100,3 +100,4 @@ Route::post('/process-payment', [PaymentController::class, 'processPayment']);
 Route::post('/create-payment-intent', 'PaymentController@createPaymentIntent');
 
 Route::get('/getBakeryPaymentInfo/{id?}', [PaymentInfoHandle::class, "getPaymentinfo"]);
+Route::post('/deductAmount/{id}', [PaymentInfoHandle::class, "deductAmount"]);

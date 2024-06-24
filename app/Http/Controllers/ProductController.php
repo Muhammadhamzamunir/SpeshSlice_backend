@@ -158,28 +158,6 @@ class ProductController extends Controller
     
 
 
-// public function getProduct(Request $request, $productId = null)
-// {
-    
-//     try {
-//         if (!$productId) {
-           
-
-//             $products = Product::with('discounts', 'bakery','reviews.user','category')->get();
-//             return response()->json(['data' => $products], 200);
-//         } else {
-            
-//             $product = Product::with('discounts', 'bakery', 'reviews.user','category')->find($productId);
-//             if (!$product) {
-//                 return response()->json(['error' => 'Product not found'], 404);
-//             }
-//             return response()->json(['data' => $product], 200);
-//         }
-//     } catch (ValidationException $e) {
-//         $errorMessages = implode(', ', $e->validator->errors()->all());
-//         return response()->json(['error' => $errorMessages], 400);
-//     }
-// }
 
 public function getProduct(Request $request, $productId = null)
 {
