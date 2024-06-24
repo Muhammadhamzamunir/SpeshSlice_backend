@@ -185,7 +185,6 @@ public function getProduct(Request $request, $productId = null)
 {
     try {
         if (!$productId) {
-            // Fetch all products that are not disabled
             $products = Product::with('discounts', 'bakery', 'reviews.user', 'category')
                                ->where('disabled', false)
                                ->get();
@@ -196,9 +195,9 @@ public function getProduct(Request $request, $productId = null)
 
             return response()->json(['data' => $products], 200);
         } else {
-            // Fetch the product by ID
+            
             $product = Product::with('discounts', 'bakery', 'reviews.user', 'category')
-                              ->where('disabled', false) // Filter out disabled products
+                              ->where('disabled', false) 
                               ->find($productId);
 
             if (!$product) {
@@ -219,6 +218,12 @@ public function getProductsByBakery($bakeryId)
     $products = Product::with('discounts', 'bakery','reviews.user','category')->where('bakery_id', $bakeryId)->get();
     return response()->json(['data' => $products], 200);
 }
+public function getAllProducts()
+{
+    $products = Product::with('discounts', 'bakery','reviews.user','category')->get();
+    return response()->json(['data' => $products], 200);
+}
+
 public function getProductsByCategory($categoryName)
 {
     $products = Product::with('discounts', 'bakery', 'reviews.user', 'category')

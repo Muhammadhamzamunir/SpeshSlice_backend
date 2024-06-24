@@ -14,6 +14,7 @@ use App\Models\Feedback;
 use App\Models\Bakery;
 use App\Models\Order;
 use App\Models\CustomizeCake;
+use App\Models\PaymentInfo;
 use Illuminate\Support\Str;
 class PaymentController extends Controller
 {
@@ -90,7 +91,6 @@ public function updateStatus(Request $request, $id)
 
     public function processPayment(Request $request)
     {
-    // return response()->json($request->all(), 200,);
         $method = $request->input('method');
         $totalAmount = $request->input('totalAmount');
         $userEmail = $request->input('userEmail');
@@ -175,13 +175,8 @@ public function updateStatus(Request $request, $id)
         
         else{
 
-        
             $paymentMethod = $request->input('payment');
            Stripe::setApiKey(env('STRIPE_SECRET'));
-
-      
-       
-
         try {
            
             $paymentMethodId = $paymentMethod['id'];
@@ -199,9 +194,21 @@ public function updateStatus(Request $request, $id)
             
             if ($paymentIntent->status === 'succeeded') {
                 $cartItems = Cart::where('user_id',$user_id)->get();
-            $cartItems->each->delete();
-           
+                $cartItems->each->delete();
+                
             foreach ($cart_product as $cartItem) {
+                $bakery = PaymentInfo::where('bakery_id',$cartItem['bakery_id'])->first();
+                if($bakery){
+                  $newPayment = $bakery->payment + ($cartItem['unit_price'] * $cartItem['quantity']);
+                  $bakery->update([
+                    'payment' => $newPayment
+                  ]);  
+                }else{
+                    PaymentInfo::create([
+                        'bakery_id' => $cartItem['bakery_id'],
+                        'payment' => $cartItem['unit_price'] * $cartItem['quantity']
+                    ]);    
+                }
                 $customize = $cartItem['customize'];
                 if($customize){
                 $product = Product::find($cartItem['id']);

@@ -33,6 +33,9 @@ class Bakery extends Model
     {
         return $this->hasMany(BakeryReview::class);
     }
-    
+    public function PaymentInfo()
+    {
+        return $this->belongsTo(PaymentInfo::class);
+    }
 
 }

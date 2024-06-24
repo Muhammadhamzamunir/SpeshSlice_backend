@@ -16,6 +16,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\GraphDataController;
 use App\Http\Controllers\ForgetPassword;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PaymentInfoHandle;
 
 //stats
 Route::get('/graph/user-registrations', [GraphDataController::class, 'getUserRegistrations']);
@@ -44,6 +45,7 @@ Route::post('/setUserDefaultAddress/{id}',[AddressController::class, "setDefault
 
 // Bakery Routes
 Route::get('/bakery/{id?}', [HandleBakeryController::class, "getBakeries"]);
+Route::get('/getAllBakeries', [HandleBakeryController::class, "getAllBakeries"]);
 Route::post('/register-bakery', [HandleBakeryController::class, "registerBakeryhandle"])->middleware(tokenAuthentication::class);
 Route::post('/update-bakery/{id}', [HandleBakeryController::class, "updateBakery"])->middleware(tokenAuthentication::class);
 Route::delete('/delete-bakery/{id}', [HandleBakeryController::class, "deleteBakery"])->middleware(tokenAuthentication::class);
@@ -58,6 +60,7 @@ Route::post('/category',[CategoryController::class,"registerCategory"]);
 
 //Product Routes
 Route::get('/products/{productId?}', [ProductController::class, 'getProduct']);
+Route::get('/getAllProducts', [ProductController::class, 'getAllProducts']);
 Route::get('/products/bakery/{bakeryId}', [ProductController::class, 'getProductsByBakery']);
 Route::get('/products/category/{categoryName}', [ProductController::class, 'getProductsByCategory']);
 Route::post('/products', [ProductController::class, 'addProduct'])->middleware(tokenAuthentication::class);
@@ -95,3 +98,5 @@ Route::post('/orders/{id}/update-status',[ PaymentController::class,'updateStatu
 
 Route::post('/process-payment', [PaymentController::class, 'processPayment']);
 Route::post('/create-payment-intent', 'PaymentController@createPaymentIntent');
+
+Route::get('/getBakeryPaymentInfo/{id?}', [PaymentInfoHandle::class, "getPaymentinfo"]);

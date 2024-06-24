@@ -15,26 +15,6 @@ use App\Models\Product;
 class HandleBakeryController extends Controller
 {
 
-//     public function getBakeries($id = null)
-// {
-//     try {
-//         if ($id) {
-//             $bakery = Bakery::with('address', 'products.category', 'products.discounts', 'reviews.user')->find($id);
-        
-//             if (!$bakery) {
-//                 return response()->json(['error' => 'Bakery not found'], 404);
-//             }
-
-//             return response()->json(['data' => $bakery]);
-//         } else {
-//             $bakeries = Bakery::with('address','products.category', 'products.discounts','reviews.user')->get();
-//             return response()->json(['data' => $bakeries]);
-//         }
-//     } catch (\Exception $e) {
-//         return response()->json(['error' => $e->getMessage()], 500);
-//     }
-// }
-
 public function getBakeries($id = null)
 {
     try {
@@ -57,6 +37,11 @@ public function getBakeries($id = null)
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
+function getAllBakeries(){
+    $bakeries = Bakery::with('address', 'products.category', 'products.discounts', 'reviews.user')->get();
+    return response()->json(['data' => $bakeries]);
 }
  
 
