@@ -215,7 +215,7 @@ public function getBakeriesNearUser($userId)
             function ($join) {
                 $join->on('bakeries.id', '=', 'distances.id');
             }
-        )
+        ) 
         ->where('distance', '<=', 10)
         ->setBindings([$userLat, $userLon, $userLat, true, 10])
         ->get();
@@ -223,7 +223,7 @@ public function getBakeriesNearUser($userId)
     $bakeriesWithProducts = [];
 
     foreach ($bakeries as $bakery) {
-        $products = Product::with('discounts')->where('bakery_id', $bakery->id)->get();
+        $products = Product::with('discounts')->where('bakery_id', $bakery->id)->where('disabled', false)->get();
         $bakeriesWithProducts[] = [
             'bakery' => $bakery,
             'products' => $products
